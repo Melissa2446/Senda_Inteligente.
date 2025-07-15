@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Senda Inteligente - Bastón para Personas con Discapacidad Visual</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Estilos Generales del Cuerpo */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F8F8;
+            color: #333;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* Contenedor Principal */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        /* Barra de Navegación (Header) */
+        .navbar {
+            background-color: #001F3F; /* Color bonito para la barra de navegación (azul oscuro) */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+            position: sticky; /* Fija la barra de navegación en la parte superior */
+            top: 0;
+            z-index: 1000; /* Asegura que esté por encima de otros elementos */
+        }
+
+        .navbar-content {
+            display: flex;
+            justify-content: space-around; /* Alinea los elementos con espacio alrededor */
+            align-items: center;
+            max-width: 1200px; /* Igual que el contenedor principal */
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .navbar-logo {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: white; /* Color del logo blanco */
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none; /* Quita los puntos de la lista */
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-item a {
+            color: white; /* Enlaces de navegación blancos */
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 0;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item a:hover {
+            color: #6484ef; /* Color al pasar el ratón */
+        }
+
+        /* Dropdown (Menú Desplegable) */
+        .dropdown {
+            position: relative;
+            display: inline-block; /* Necesario para que el contenido se posicione correctamente */
+        }
+
+        .dropdown-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            color: white; /* Botón desplegable blanco */
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            transition: color 0.3s ease;
+        }
+
+        .dropdown-button:hover {
+            color: #6484ef;
+        }
+
+        .dropdown-content {
+            display: none; /* Oculto por defecto */
+            position: absolute;
+            background-color: #ffffff;
+            min-width: 400px; /* Ancho mínimo para el panel */
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            top: 100%; /* Posiciona debajo del botón */
+            left: 0; /* Alinea el inicio del dropdown con el botón */
+            margin-top: 10px; /* Pequeño espacio entre botón y panel */
+            grid-template-columns: repeat(3, 1fr); /* 3 columnas para las categorías */
+            gap: 1.5rem; /* Espacio entre columnas */
+        }
+
+        .dropdown-content.show {
+            display: grid; /* Muestra el contenido como una cuadrícula */
+        }
+
+        .dropdown-category h6 {
+            font-weight: 700;
+            color: #001F3F; /* Color del título de categoría */
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #e2e8f0; /* Subrayado para la categoría */
+            padding-bottom: 0.5rem;
+        }
+
+        .dropdown-category a {
+            color: #4a5568;
+            padding: 0.5rem 0;
+            text-decoration: none;
+            display: block; /* Cada enlace en su propia línea */
+            transition: color 0.3s ease;
+        }
+
+        .dropdown-category a:hover {
+            color: #006A4E;
+        }
+
+        /* Sección Hero (Cabecera Principal) - Imagen de Fondo */
+        #hero-section {
+            background-image: url(perrito.jpg); /* Imagen de bastón/tecnología. REEMPLAZA ESTA URL */
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 15rem 0; /* Aumenta el padding para mostrar más fondo */
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh; /* Asegura que ocupe al menos el 80% de la altura de la ventana */
+        }
+
+        .hero-content {
+            background-color: rgba(0, 0, 0, 0.6); /* Fondo oscuro semitransparente para el texto */
+            padding: 2.5rem;
+            border-radius: 1rem;
+            max-width: 90%;
+        }
+
+        .hero-title {
+            font-size: 4rem; /* Título más grande */
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: 1.75rem; /* Subtítulo más grande */
+            font-weight: 300;
+            max-width: 800px; /* Ancho limitado para mejor lectura */
+            margin: 0 auto;
+        }
+
+        /* Ocultar secciones inicialmente */
+        main > section {
+            display: none;
+        }
+
+        /* Mostrar solo la sección activa */
+        main > section.active-section {
+            display: block;
+        }
+
+        /* Estilos de las Secciones (con imágenes de fondo) */
+        .themed-section {
+            background-size: cover;
+            background-position: center;
+            color: white; /* Texto blanco sobre las imágenes de fondo */
+            padding: 6rem 0; /* Ajusta el padding según necesites */
+            min-height: 70vh; /* Asegura que la sección tenga una altura mínima */
+            display: flex;
+            align-items: center; /* Centra verticalmente el contenido */
+        }
+
+        .themed-section .container {
+            background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco semitransparente para el contenido */
+            padding: 2rem;
+            border-radius: 1rem;
+            color: #333; /* Texto oscuro para el contenido de la tarjeta */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Imágenes para cada sección */
+        #quienes-somos { background-image: url(pensando.jpg); } /* Reemplaza esta URL */
+        #por-que-proyecto { background-image: url(senda.jpg); } /* Reemplaza esta URL */
+        #baston-inteligente { background-image: url(tecnologia.png); } /* Reemplaza esta URL */
+        #nombre-proyecto { background-image: url(bastón.jpg); } /* Reemplaza esta URL */
+        #objetivos { background-image: url(objetivos.png); } /* Reemplaza esta URL */
+        #planteamiento-problema { background-image: url(desarrollo.jpg); } /* Reemplaza esta URL */
+        #mision { background-image: url(misión.jpg); } /* Reemplaza esta URL */
+        #vision { background-image: url(visión.jpg); } /* Reemplaza esta URL */
+        #marco-referencial { background-image: url('https://via.placeholder.com/1920x1080?text=Marco+Referencial'); } /* Reemplaza esta URL */
+
+        /* Títulos de Sección */
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a202c; /* Color oscuro para títulos en cajas de contenido claras */
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+        }
+        /* Ajuste para el título dentro de secciones con fondo */
+        .themed-section .section-title {
+            color: #1a202c; /* Mantener oscuro si está dentro de un container blanco semi-transparente */
+        }
+
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background-color: #6484ef;
+            margin: 0.75rem auto 0;
+            border-radius: 2px;
+        }
+
+        /* Tarjetas de Contenido (reducido su uso fuera de themed-section) */
+        .card {
+            background-color: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Estilos para el equipo */
+        .team-member {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .team-member-name {
+            font-weight: 600;
+            font-size: 1.25rem;
+            color: #2d3748;
+        }
+        .team-member-role {
+            font-size: 1rem;
+            color: #4a5568;
+        }
+
+        /* Estilos de lista con ícono */
+        .list-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        .list-item svg {
+            flex-shrink: 0;
+            margin-right: 0.75rem;
+            color: #4299e1;
+        }
+
+        /* Sección de Contacto */
+        #contacto {
+            background-color: #f0f4f8; /* Un fondo suave para la sección de contacto */
+            padding: 4rem 0;
+            margin-top: 3rem;
+            border-radius: 1rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            color: #333; /* Texto oscuro para el contacto */
+        }
+
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        @media (min-width: 768px) {
+            .contact-content {
+                grid-template-columns: 2fr 1fr; /* Formulario más grande que info */
+            }
+        }
+
+        .contact-form .card {
+            background-color: white;
+            padding: 2.5rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .contact-form label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .contact-form input[type="text"],
+        .contact-form input[type="email"],
+        .contact-form textarea {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #cbd5e0;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+        }
+
+        .contact-form textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .contact-form button {
+            background-color: #006A4E; /* Color verde para el botón */
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .contact-form button:hover {
+            background-color: #004d3a;
+        }
+
+        .contact-info-panel {
+            background-color: #001F3F; /* Color oscuro para el panel de información */
+            color: white;
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .contact-info-panel h3 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .contact-info-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .contact-info-item i {
+            margin-right: 1rem;
+            color: #6484ef; /* Color de los íconos de info */
+            font-size: 1.25rem;
+            width: 20px; /* Asegura un ancho fijo para alineación */
+            text-align: center;
+        }
+
+        .contact-info-item a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .contact-info-item a:hover {
+            color: #6484ef;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 2rem;
+            transition: color 0.3s ease;
+        }
+        .social-links a:hover {
+            color: #6484ef;
+        }
+
+
+        /* Footer */
+        .footer {
+            background-color: #1a202c; /* Color oscuro para el footer */
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: 4rem; /* Más espacio arriba */
+        }
+
+        /* Media Queries para Responsividad */
+        @media (max-width: 768px) {
+            .navbar-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .dropdown-content {
+                min-width: unset; /* Quita el min-width en pantallas pequeñas */
+                width: 90%; /* Ocupa casi todo el ancho */
+                grid-template-columns: 1fr; /* Una sola columna en móvil */
+                left: 5%; /* Ajusta la posición en móvil */
+                transform: translateX(0); /* Deshace la transformación */
+            }
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            .hero-subtitle {
+                font-size: 1.25rem;
+            }
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="#hero-section" class="navbar-logo">SENDA INTELIGENTE</a>
+            <ul class="nav-links">
+                <li class="nav-item"><a href="#hero-section" data-target="hero-section">Inicio</a></li>
+                <li class="nav-item dropdown">
+                    <button class="dropdown-button" id="dropdownToggleButton">
+                        Información
+                        <svg class="w-4 h-4 ml-1 fill-current" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                        </svg>
+                    </button>
+                    <div id="infoDropdown" class="dropdown-content">
+                        <div class="dropdown-category">
+                            <h6 class="dropdown-header">Acerca de Nosotros</h6>
+                            <a href="#quienes-somos" class="dropdown-link" data-target="quienes-somos">¿A quiénes te diriges?</a>
+                            <a href="#mision" class="dropdown-link" data-target="mision">Nuestra Misión</a>
+                            <a href="#vision" class="dropdown-link" data-target="vision">Nuestra Visión</a>
+                            <a href="#objetivos" class="dropdown-link" data-target="objetivos">Nuestros Objetivos</a>
+                        </div>
+                        <div class="dropdown-category">
+                            <h6 class="dropdown-header">Acerca de nuestro proyecto</h6>
+                            <a href="#por-que-proyecto" class="dropdown-link" data-target="por-que-proyecto">La identidad de Senda Inteligente</a>
+                            <a href="#nombre-proyecto" class="dropdown-link" data-target="nombre-proyecto">Detrás de Senda Inteligente</a>
+                            <a href="#planteamiento-problema" class="dropdown-link" data-target="planteamiento-problema">El desafío que abordamos</a>
+                        </div>
+                        <div class="dropdown-category">
+                            <h6 class="dropdown-header">Acerca de nuestro producto</h6>
+                            <a href="#baston-inteligente" class="dropdown-link" data-target="baston-inteligente">Senda Inteligente</a>
+                            
+                            <a href="#marco-referencial" class="dropdown-link" data-target="marco-referencial">Nuestra base de conocimiento</a>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item"><a href="#contacto" data-target="contacto">Contáctanos</a></li>
+                <li class="nav-item"><a href="#" data-target="login">Login</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header id="hero-section">
+        <div class="container hero-content">
+            <h1 class="hero-title">SENDA INTELIGENTE</h1>
+            <p class="hero-subtitle"> Más allá de un bastón es una guía para tu vida</p>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <section id="quienes-somos" class="themed-section">
+            <div class="container">
+                <h2 class="section-title">¿Quiénes Somos?</h2>
+                <div class="card text-center">
+                    <p class="text-lg leading-relaxed">Somos una empresa que busca contribuir en el campo de los dispositivos tecnológicos asistidos accesibles para personas con discapacidad. Nos centramos en mejorar la calidad de vida de estas personas a través de tecnología asistida.</p>
+                    <h3 class="text-xl font-semibold mt-6 mb-4 text-center">Nuestro Equipo</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="team-member">
+                            <p class="team-member-name">Melissa Chisaba</p>
+                            <p class="team-member-role">Gerente Administrativa</p>
+                        </div>
+                        <div class="team-member">
+                            <p class="team-member-name">Katlyn Cubillos</p>
+                            <p class="team-member-role">Marketing y Ventas / Recursos Humanos</p>
+                        </div>
+                        <div class="team-member">
+                            <p class="team-member-name">Ángel Rios</p>
+                            <p class="team-member-role">Gestor de Finanzas</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="por-que-proyecto" class="themed-section">
+            <div class="container">
+                <h2 class="section-title">¿Por qué nació Senda Inteligente?</h2>
+                <div class="card">
+                    <p class="text-lg leading-relaxed mb-4">Los bastones inteligentes para personas con discapacidad visual son una herramienta esencial para mejorar la movilidad y seguridad en su día a día. A través de sensores y tecnología avanzada, estos bastones no solo detectan obstáculos, sino que también ayudan a orientarse en el entorno, proporcionando mayor autonomía.</p>
+                    <p class="text-lg leading-relaxed mb-4">Además, ofrecen una sensación de confianza y libertad, reduciendo la dependencia de otros. Elaborar bastones inteligentes no es solo un avance tecnológico, sino un paso hacia una sociedad más inclusiva, donde todos puedan caminar con seguridad y sin barreras.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="baston-inteligente" class="themed-section">
+            <div class="container">
+                <h2 class="section-title">Bastón Inteligente</h2>
+                <div class="card">
+                    <p class="text-lg leading-relaxed mb-4">El bastón inteligente para personas con discapacidad visual es una herramienta diseñada para mejorar la movilidad y autonomía de las personas con discapacidad visual. A diferencia de un bastón tradicional, este dispositivo incorpora tecnología avanzada, como sensores y sistemas de navegación, para detectar obstáculos, medir distancias y alertar al usuario sobre posibles peligros mediante vibraciones o sonidos.</p>
+                    <p class="text-lg leading-relaxed">Además, algunos modelos incluyen conexión a aplicaciones móviles, lo que permite ofrecer información adicional sobre el entorno, como rutas o puntos de interés. Este bastón no solo facilita la orientación, sino que también brinda mayor seguridad y confianza a quienes lo usan, ayudándoles a moverse de manera más independiente y eficiente.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="nombre-proyecto" class="themed-section">
+            <div class="container">
+                <h2 class="section-title">¿Senda Inteligente?</h2>
+                <div class="card">
+                    <p class="text-lg leading-relaxed mb-4">El nombre "Senda Inteligente" se elige porque refleja la idea de un camino más seguro y accesible para las personas con discapacidad visual. "Senda" hace referencia al trayecto que alguien sigue, y en este caso, se convierte en un camino guiado por tecnología avanzada que ayuda a la persona a orientarse.</p>
+                    <p class="text-lg leading-relaxed">"Inteligente" resalta la capacidad del bastón para adaptarse al entorno, detectar obstáculos y ofrecer indicaciones precisas. Juntos, el nombre simboliza una ruta más clara, segura y adaptada a las necesidades de quien lo usa, mejorando su autonomía y confianza al moverse por el mundo.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="objetivos" class="themed-section">
+            <div class="container">
+                <h2 class="section-title">Nuestros Objetivos</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="card">
+                        <h3 class="text-2xl font-semibold mb-4 text-center text-blue-700">Objetivos Generales</h3>
+                        <ul class="space-y-4">
+                            <li class="list-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <span><strong>Mejorar la movilidad y seguridad:</strong> Facilitar el desplazamiento de las personas ciegas mediante tecnología que detecte obstáculos, cambios en el terreno y alertas de posibles peligros, promoviendo una mayor autonomía.</span>
+                            </li>
+                            <li class="list-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <span><strong>Fomentar la independencia:</strong> Proveer a las personas con discapacidad visual de una herramienta que les permita moverse con confianza y sin necesidad constante de asistencia, mejorando su calidad de vida.</span>
+                            </li>
+                            <li class="list-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <span><strong>Incorporar tecnología accesible e innovadora:</strong> Integrar tecnologías como sensores de proximidad, GPS y sistemas de navegación en los bastones, adaptados a las necesidades específicas de las personas con discapacidad visual.</span>
+                            </li>
+                            <li class="list-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <span><strong>Promover la inclusión social:</strong> Ayudar a las personas ciegas a interactuar de manera más fluida y segura en entornos urbanos, reduciendo barreras y promoviendo una mayor integración en la sociedad.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3 class="text-2xl font-semibold mb-4 text-center text-blue-700">Objetivos Específicos</h3>
+                        <ul class="space-y-4">
+                            <li class="list-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span><strong>Desarrollar un sistema de sensores eficientes:</strong> Crear y mejorar sensores que detecten obstáculos cercanos (como paredes, personas, y otros objetos) y alerten al usuario de manera precisa y oportuna.</span>
+                            </li>
+                            <li class="list-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span><strong>Incorporar tecnología de navegación GPS:</strong> Integrar un sistema GPS que permita a las personas ciegas recibir indicaciones precisas de dirección, ayudándoles a orientarse mejor en entornos urbanos y desconocidos.</span>
+                            </li>
+                            <li class="list-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span><strong>Desarrollar alertas sonoras y táctiles:</strong> Implementar alertas a través de vibraciones o sonidos para indicar diferentes tipos de obstáculos o situaciones, proporcionando una experiencia más intuitiva y accesible.</span>
+                            </li>
+                            <li class="list-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span><strong>Optimizar la duración de la batería:</strong> Asegurar que el bastón inteligente tenga una batería de larga duración, para que los usuarios puedan utilizarlo durante el día sin la preocupación constante de recargarlo.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="planteamiento-problema" class="themed-section">
+            <div class="container">
+                <h2 class="section-title">¿Qué buscamos cambiar?</h2>
+                <div class="card">
+                    <p class="text-lg leading-relaxed mb-4">Las personas con discapacidad visual enfrentan una serie de dificultades a la hora de desplazarse en espacios públicos y entornos desconocidos. Aunque los bastones tradicionales les permiten detectar obstáculos cercanos, no ofrecen la información necesaria para orientarse con precisión ni para identificar peligros en su camino, lo que genera inseguridad y limita su independencia.</p>
+                    <p class="text-lg leading-relaxed mb-4">Esta situación obliga a muchas personas con discapacidad visual a depender de acompañantes o sistemas de apoyo adicionales, lo cual no solo reduce su autonomía, sino que también incrementa el riesgo de accidentes. Además, la falta de herramientas más avanzadas para la navegación y la detección de obstáculos en tiempo real dificulta la integración plena de las personas ciegas en la sociedad.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="mision" class="themed-section">
+            <div class="container">
+                <h2 class="section-title"> Nuestra Misión</h2>
+                <div class="card text-center">
+                    <p class="text-lg leading-relaxed">Nuestra misión es crear bastones inteligentes que brinden a las personas ciegas mayor seguridad y libertad al moverse por el mundo. Queremos que cada persona pueda caminar con confianza, sin depender de otros, gracias a la tecnología que les avise de obstáculos y les guíe de manera sencilla y accesible.</p>
+                    <p class="text-lg leading-relaxed mt-4">Nos esforzamos por mejorar su calidad de vida, ayudándoles a superar barreras físicas y sociales, para que puedan disfrutar de su día a día con más independencia y menos limitaciones.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="vision" class="themed-section">
+            <div class="container">
+                <h2 class="section-title"> Nuestra Visión</h2>
+                <div class="card text-center">
+                    <p class="text-lg leading-relaxed">Ser una empresa comprometida con la mejora de soluciones electrónicas existentes, adaptándolas e innovándolas para aumentar la movilidad y calidad de vida de las personas con discapacidad visual.</p>
+                    <p class="text-lg leading-relaxed">Nuestra visión es contribuir al desarrollo de bastones inteligentes más accesibles, seguros y eficientes, integrando tecnología actual de forma responsable para ampliar su alcance y utilidad.</p>
+                    <p class="text-lg leading-relaxed">Buscamos un futuro donde la tecnología esté al servicio de una sociedad más inclusiva, donde cada paso esté guiado con confianza, sin barreras ni limitaciones.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="marco-referencial" class="themed-section">
+            <div class="container">
+                <h2 class="section-title">Marco Referencial</h2>
+                <div class="card">
+                    <p class="text-lg leading-relaxed mb-4">Las personas con discapacidad visual enfrentan desafíos significativos en su movilidad e independencia. A lo largo de la historia, se han desarrollado diversas herramientas para asistirlas, siendo el bastón blanco una de las más utilizadas. Sin embargo, los avances tecnológicos han permitido la creación de dispositivos más sofisticados, como los bastones inteligentes, que integran sensores y sistemas de navegación para mejorar la orientación y seguridad de los usuarios. Nuestro proyecto busca desarrollar un bastón inteligente que combine tecnología avanzada con un diseño accesible, ofreciendo una solución eficiente a las dificultades de movilidad de las personas con discapacidad visual.</p>
+
+                    <h3 class="text-xl font-semibold mt-6 mb-3 text-blue-700">Clasificación y Estadísticas</h3>
+                    <p class="text-lg leading-relaxed mb-4">La discapacidad visual puede clasificarse en baja visión, ceguera parcial y ceguera total. Según la Organización Mundial de la Salud (OMS), más de 285 millones de personas en el mundo presentan algún grado de discapacidad visual, de las cuales 39 millones son totalmente ciegas.</p>
+                    <p class="text-lg leading-relaxed mb-4">Estas personas dependen de herramientas como bastones tradicionales, perros guía o aplicaciones móviles para desplazarse de manera segura. Sin embargo, estos métodos presentan limitaciones, como la incapacidad de detectar obstáculos a nivel superior (como ramas o señales de tránsito) o dificultades en la navegación en entornos urbanos complejos.</p>
+
+                    <h3 class="text-xl font-semibold mt-6 mb-3 text-blue-700">Problemática Actual y Solución</h3>
+                    <p class="text-lg leading-relaxed mb-4">Estudios indican que una alta proporción de personas con discapacidad visual sufren accidentes debido a obstáculos inesperados en su camino. La falta de accesibilidad en espacios públicos y la ausencia de soluciones tecnológicas asequibles agravan la problemática.</p>
+                    <p class="text-lg leading-relaxed mb-4">Existen bastones inteligentes en el mercado, pero su alto costo y complejidad de uso limitan su adopción masiva. Nuestro bastón inteligente busca cerrar esta brecha, proporcionando una alternativa accesible y eficiente para mejorar la movilidad y autonomía de los usuarios.</p>
+
+                    <h3 class="text-xl font-semibold mt-6 mb-3 text-blue-700">Consensos y Discrepancias en el Desarrollo de Tecnologías Asistivas</h3>
+                    <p class="text-lg leading-relaxed mb-2"><strong>Consenso:</strong></p>
+                    <ul class="list-disc list-inside ml-4 mb-4 space-y-2">
+                        <li>La tecnología puede mejorar significativamente la movilidad de personas con discapacidad visual.</li>
+                        <li>Sensores ultrasónicos y vibraciones hápticas han demostrado ser efectivos para detectar obstáculos.</li>
+                        <li>La integración con asistentes de voz y GPS mejora la orientación en entornos desconocidos.</li>
+                    </ul>
+                    <p class="text-lg leading-relaxed mb-2"><strong>Discrepancias:</strong></p>
+                    <ul class="list-disc list-inside ml-4 mb-4 space-y-2">
+                        <li>Algunos estudios cuestionan la dependencia de la tecnología y la posible falta de adaptación de los usuarios a nuevos dispositivos.</li>
+                        <li>Existen debates sobre la asequibilidad de estos dispositivos y su viabilidad en países en desarrollo.</li>
+                        <li>La duración de la batería y el peso del dispositivo pueden influir en su comodidad y adopción.</li>
+                    </ul>
+
+                    <h3 class="text-xl font-semibold mt-6 mb-3 text-blue-700">Nuestra Solución Innovadora</h3>
+                    <p class="text-lg leading-relaxed mb-4">Nuestro proyecto se basa en investigaciones y tecnologías probadas, evitando afirmaciones vagas. En su lugar, tomamos como referencia estudios sobre el uso de sensores para la detección de obstáculos y dispositivos hápticos para la retroalimentación táctil.</p>
+                    <p class="text-lg leading-relaxed mb-2">Además, proponemos una solución innovadora basada en:</p>
+                    <ul class="list-disc list-inside ml-4 space-y-2">
+                        <li>Sensores ultrasónicos para la detección de obstáculos cercanos.</li>
+                        <li>Vibraciones en el mango para indicar la dirección y distancia de los objetos.</li>
+                        <li>Conectividad con una app móvil que proporcione información adicional y permita configuraciones personalizadas.</li>
+                    </ul>
+                    <p class="text-lg leading-relaxed mt-4">Este marco de referencia permite establecer una base sólida para justificar nuestro proyecto, asegurando que esté fundamentado en evidencia y contribuyendo al desarrollo de soluciones accesibles para la movilidad de personas con discapacidad visual.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="contacto" class="contact-section">
+            <div class="container">
+                <h2 class="section-title">Contáctanos</h2>
+                <div class="contact-content">
+                    <div class="contact-form card">
+                        <form action="#" method="POST">
+                            <div class="mb-4">
+                                <label for="name">Nombre Completo</label>
+                                <input type="text" id="name" name="name" placeholder="Tu nombre" required>
+                            </div>
+                            <div class="mb-4">
+                                <label for="email">Correo Electrónico</label>
+                                <input type="email" id="email" name="email" placeholder="tu.correo@example.com" required>
+                            </div>
+                            <div class="mb-4">
+                                <label for="message">Mensaje</label>
+                                <textarea id="message" name="message" placeholder="Escribe tu mensaje aquí..." required></textarea>
+                            </div>
+                            <button type="submit">Enviar Mensaje</button>
+                        </form>
+                    </div>
+
+                    <div class="contact-info-panel">
+                        <h3>Información de Contacto</h3>
+                        <div class="contact-info-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Dirección: Tu Dirección, Ciudad, País</span>
+                        </div>
+                        <div class="contact-info-item">
+                            <i class="fas fa-clock"></i>
+                            <span>Horario: Lunes a Viernes, 9 AM - 5 PM</span>
+                        </div>
+                        <div class="contact-info-item">
+                            <i class="fas fa-envelope"></i>
+                            <a href="mailto:sendainteligente@gmail.com">sendainteligente@gmail.com</a>
+                        </div>
+                        <div class="contact-info-item">
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <a href="tel:+573103389012">+57 310 338 9012</a><br>
+                                <a href="tel:+573108718328">+57 310 871 8328</a><br>
+                                <a href="tel:+573013897747">+57 301 389 7747</a>
+                            </div>
+                        </div>
+
+                        <div class="social-links">
+                            <a href="https://www.facebook.com/sendainteligente" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="https://www.instagram.com/sendainteligente?igsh=MWFnOHd4NnBoYzFvZQ==" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="login" class="themed-section">
+            <div class="container text-center">
+                <h2 class="section-title">Iniciar Sesión</h2>
+                <p class="text-lg">Aquí irá el formulario o contenido para el login.</p>
+                <div class="card p-8 mt-6 max-w-md mx-auto">
+                    <form>
+                        <div class="mb-4">
+                            <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Usuario:</label>
+                            <input type="text" id="username" name="username" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Nombre de usuario">
+                        </div>
+                        <div class="mb-6">
+                            <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Contraseña:</label>
+                            <input type="password" id="password" name="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" placeholder="******************">
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+                                Iniciar Sesión
+                            </button>
+                            <a class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#">
+                                ¿Olvidaste tu contraseña?
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Senda Inteligente. Todos los derechos reservados.</p>
+            <p class="mt-2">María y asociados</p>
+        </div>
+    </footer>
+
+    <script>
+        const dropdownButton = document.getElementById('dropdownToggleButton');
+        const dropdownContent = document.getElementById('infoDropdown');
+        const navLinks = document.querySelectorAll('.nav-item a[data-target], .dropdown-link[data-target]');
+        const sections = document.querySelectorAll('main > section');
+
+        // Función para ocultar todas las secciones excepto la pasada como argumento
+        function showSection(targetId) {
+            sections.forEach(section => {
+                if (section.id === targetId) {
+                    section.classList.add('active-section');
+                    // Scroll a la sección si no es la hero
+                    if (targetId !== 'hero-section') {
+                        section.scrollIntoView({ behavior: 'smooth' });
+                    }
+                } else {
+                    section.classList.remove('active-section');
+                }
+            });
+            // Asegúrate de que el hero-section siempre sea visible si no hay otra activa (o al inicio)
+            if (targetId === 'hero-section') {
+                 document.getElementById('hero-section').classList.add('active-section');
+            }
+        }
+
+        // Al cargar la página, mostrar solo la sección hero
+        document.addEventListener('DOMContentLoaded', () => {
+            showSection('hero-section');
+        });
+
+        // Event listener para el botón del dropdown
+        dropdownButton.addEventListener('click', function() {
+            dropdownContent.classList.toggle('show');
+        });
+
+        // Cerrar el dropdown si se hace clic fuera de él
+        window.addEventListener('click', function(event) {
+            if (!event.target.matches('.dropdown-button') && !event.target.closest('.dropdown')) {
+                if (dropdownContent.classList.contains('show')) {
+                    dropdownContent.classList.remove('show');
+                }
+            }
+        });
+
+        // Event listeners para los enlaces de navegación
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault(); // Previene el comportamiento por defecto del enlace
+                const targetId = this.dataset.target; // Obtiene el ID de la sección a mostrar
+                showSection(targetId);
+
+                // Cierra el dropdown si se hizo clic en un enlace del dropdown
+                if (dropdownContent.classList.contains('show')) {
+                    dropdownContent.classList.remove('show');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
